@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +28,7 @@ public class UrlService {
     private int shortCodeLength;
 
     private static final String BASE62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     @Transactional
     public UrlResponse shortenUrl(UrlRequest request) {
@@ -78,10 +79,9 @@ public class UrlService {
     }
 
     private String generateShortCode() {
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(shortCodeLength);
         for (int i = 0; i < shortCodeLength; i++) {
-            sb.append(BASE62.charAt(random.nextInt(BASE62.length())));
+            sb.append(BASE62.charAt(SECURE_RANDOM.nextInt(BASE62.length())));
         }
         return sb.toString();
     }
